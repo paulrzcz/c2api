@@ -1,6 +1,9 @@
 package c2api
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
@@ -56,4 +59,38 @@ func NewClient(httpClient httpClient, baseURL string, apiKey string) (*Client, e
 
 func NewDefaultClient(apiKey string) (*Client, error) {
 	return NewClient(nil, WorldURL, apiKey)
+}
+
+func (c *Client) Do(request *http.Request, v interface{}) (response *http.Response, err error) {
+	httpResp, err := c.client.Do(request)
+	if err != nil {
+		return nil, err
+	}
+
+	code := httpResp.StatusCode
+	if code < 200 || code > 299 {
+		return httpResp, fmt.Errorf("request failed with status code=%d", code)
+	}
+
+	if v != nil {
+		defer httpResp.Body.Close()
+		err = json.NewDecoder(httpResp.Body).Decode(v)
+	}
+
+	return httpResp, err
+}
+
+func (c *Client) NewPostRequest(relativeUrl string, v interface{}) (req *http.Request, err error) {
+	b := new(bytes.Buffer)
+	json.NewEncoder(b).Encode(v)
+
+	url, _ := c.baseURL.Parse(relativeUrl)
+	req, err = http.NewRequest("POST", url.String(), b)
+
+	if err != nil {
+		return req, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	return req, nil
 }
