@@ -67,8 +67,6 @@ func (s *StrategyAccessService) GetSystemRoaster(filter string) ([]SystemRoaster
 		return nil, nil, err
 	}
 
-	req.Header.Set("Content-Type", "application/json")
-
 	c := &systemRoasterResp{}
 
 	resp, err := s.client.Do(req, c)
