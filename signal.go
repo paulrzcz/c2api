@@ -84,3 +84,31 @@ func (s *SignalEntryService) SubmitSignal(systemId string, signal Signal) (*Sign
 
 	return &c.Signal, resp, err
 }
+
+type cancelSignalReq struct {
+	ApiKey   string `json:"apikey"`
+	SystemId string `json:"systemid"`
+	SignalId string `json:"signalid"`
+}
+
+func (s *SignalEntryService) CancelSignal(systemId string, signalId string) (*SignalConfirmation, *http.Response, error) {
+	reqBody := cancelSignalReq{
+		ApiKey:   s.client.apiKey,
+		SystemId: systemId,
+		SignalId: signalId,
+	}
+
+	req, err := s.client.NewPostRequest(SubmitSignalUrl, reqBody)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	c := &submitSignalResp{}
+	resp, err := s.client.Do(req, c)
+
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return &c.Signal, resp, err
+}
