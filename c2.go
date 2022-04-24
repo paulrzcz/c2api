@@ -20,6 +20,11 @@ type Client struct {
 	client  httpClient
 	baseURL *url.URL
 	apiKey  string
+
+	// public API of the client
+	Strategy  *StrategyAccessService
+	Signal    *SignalEntryService
+	AutoTrade *AutoTradeManagementService
 }
 
 func NewClient(httpClient httpClient, baseURL string, apiKey string) (*Client, error) {
@@ -42,6 +47,9 @@ func NewClient(httpClient httpClient, baseURL string, apiKey string) (*Client, e
 		baseURL: parsedBaseURL,
 		apiKey:  apiKey,
 	}
+	c.AutoTrade = &AutoTradeManagementService{client: c}
+	c.Strategy = &StrategyAccessService{client: c}
+	c.Signal = &SignalEntryService{client: c}
 
 	return c, nil
 }
