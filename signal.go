@@ -44,6 +44,8 @@ type Signal struct {
 	Action          string  `json:"action"`
 	TypeOfSymbol    string  `json:"typeofsymbol"`
 	Duration        string  `json:"duration"`
+	Quantity        int32   `json:"quant"`
+	Symbol          string  `json:"symbol"`
 	StopPrice       float64 `json:"stop,omitempty"`
 	LimitPrice      float64 `json:"limit,omitempty"`
 	Market          string  `json:"market,omitempty"`
@@ -54,6 +56,16 @@ type Signal struct {
 }
 
 type SignalConfirmation struct {
+	Market   string `json:"market"`
+	SignalId string `json:"signalid"`
+	StopLoss string `json:"stoploss"`
+	Comments string `json:"comments"`
+	Day      string `json:"day"`
+	SystemId string `json:"systemid"`
+	Symbol   string `json:"symbol"`
+	Quantity int64  `json:"quant"`
+	Action   string `json:"action"`
+	Currency string `json:"currency"`
 }
 
 type submitSignalResp struct {
