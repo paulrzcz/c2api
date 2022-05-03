@@ -1,3 +1,3 @@
-module paulrz.cz/c2api/v2
+module github.com/paulrzcz/c2api
 
 go 1.18
